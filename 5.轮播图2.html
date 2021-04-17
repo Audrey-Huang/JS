@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        .wrap{
+            width: 800px;
+            height: 400px;
+            position: relative;
+            margin: 100px auto;
+        }
+        .img_list{
+            width: 800px;
+            height: 400px;
+            position: relative;
+            padding-left: 0px;;
+        }
+        .img{
+            width: 100%;
+            height: 100%;
+            list-style: none;
+            position: absolute;
+            z-index: 10px;
+        }
+        .img:nth-child(1){
+            background-color: #ccffcc;
+        }
+        .img:nth-child(2){
+            background-color:#99cccc;
+        }
+        .img:nth-child(3){
+            background-color:#ffffcc;
+        }
+        .img:nth-child(4){
+            background-color:#336699;
+        }
+        .img:nth-child(5){
+            background-color:#99cccc;
+        }
+        /*通过添加active选择器，来指定显示的图片的层级*/
+        .img.active{
+            z-index:100;
+        }
+        .btn{
+            width: 40px;
+            height: 60px;
+            position: absolute;
+            top:160px;
+            z-index:1000;
+            background-color: transparent;
+            border: transparent;
+            font-size: 30px;
+            opacity: .3;
+        }
+        #gopre{
+            left: 0px;
+        }
+        #gonext{
+            right: 0px;
+        }
+        .point_list{
+            position: absolute;
+            bottom: 5px;
+            right: 20px;
+            list-style: none;
+            z-index: 10000;
+        }
+        .point{
+            width: 15px;
+            height: 15px;
+            border-radius: 100%;
+            background-color: #999;
+            float: left;
+            margin: 0px 10px;
+            cursor: pointer;
+        }
+        /*通过添加active选择器，来指定显示的原点的样式*/
+        .point.active{
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <ul class="img_list">
+            <li class="img active"></li>
+            <li class="img"></li>
+            <li class="img"></li>
+            <li class="img"></li>
+            <li class="img"></li>
+        </ul>
+        <ul class="point_list">
+            <li class="point active" data-index="0"></li>
+            <li class="point" data-index="1"></li>
+            <li class="point" data-index="2"></li>
+            <li class="point" data-index="3"></li>
+            <li class="point" data-index="4"></li>
+        </ul>
+        <button class="btn" id="gopre"><</button>
+        <button class="btn" id="gonext">></button>
+    </div>
+    <script type="text/javascript">
+            var img_list=document.getElementsByClassName("img");//获取所有image
+            var gopre=document.getElementById("gopre");//获取后退按钮
+            var gonext=document.getElementById("gonext");//获取前进按钮
+            var point_list=document.getElementsByClassName("point");//获取所有原点
+            var index=0;//通过index表示所显示图片
+            //显示对应index图片，显示前，将其他图片的类名还原为img
+            var goIndex=function(){
+                for(var i=0;i<img_list.length;i++){
+                    img_list[i].className="img";
+                    point_list[i].className="point";
+                }
+                img_list[index].className="img active";
+                point_list[index].className="point active";
+            };
+            //前进函数
+            var gonext1=function(){
+                index++;
+                if(index>img_list.length-1) index=0;
+                goIndex();
+            };
+            //为前进按钮绑定前进响应函数
+            gonext.addEventListener('click',gonext1);
+            //后退函数
+            var gopre1=function(){
+                index--;
+                if(index<0) index=img_list.length-1;
+                goIndex();
+            };
+            //为后退函数绑定后退响应函数
+            gopre.addEventListener('click',gopre1);
+            //为所有的原点绑定点击显示指定图片的函数，为了获取到图片的序号，给图片添加一个data-index属性，通过this.getAttribute获取该值，然后赋值给index
+            for(var i=0;i<point_list.length;i++){
+                point_list[i].addEventListener('click',function(){
+                    var pointIndex=this.getAttribute("data-index");
+                    index=pointIndex;
+                    goIndex();
+                })
+            }
+            //设置定时器，隔一段时间运行gonext1，切换到下一张
+            var timer=setInterval(function(){
+                gonext1();
+            },3000)
+    </script>
+</body>
+</html>
